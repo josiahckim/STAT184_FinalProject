@@ -1,0 +1,19 @@
+---
+title: "Final Project Preiminary EDA"
+author: "Josiah Kim"
+date: "13 November 2020"
+output: html_notebook
+---
+
+### Guiding Question
+
+
+
+### Become Acquainted with the Data
+
+
+
+### Explore Intuition
+
+
+### TWO Data Sources

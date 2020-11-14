@@ -6,10 +6,24 @@ output: html_notebook
 ---
 
 ### Guiding Question
-
+Do black students face harsher/more punishment than their white counterparts within the public school system?  
 
 
 ### Become Acquainted with the Data
+I found the data on The Civil Rights Project (https://www.civilrightsproject.ucla.edu/). This data is collected and maintained by The Civil Rights Data Collection (https://ocrdata.ed.gov/). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education's Office for Civil Rights. Here is a peek at the data:
+
+
+```{r}
+# Load necessary packages
+library(tidyverse)
+# Stage the data
+refAndArrest <- read.csv("Referrals and Arrests.csv")
+```
+
+
+```{r}
+glimpse(refAndArrest)
+```
 
 
 

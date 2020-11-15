@@ -6,28 +6,55 @@ output: html_notebook
 ---
 
 ### Guiding Question
-Do black students face harsher/more punishment than their white counterparts within the public school system?  
+Do black students face harsher/more punishment than their counterparts within the public school system?  
 
 
 ### Become Acquainted with the Data
-I found the data on The Civil Rights Project (https://www.civilrightsproject.ucla.edu/). This data is collected and maintained by The Civil Rights Data Collection (https://ocrdata.ed.gov/). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education's Office for Civil Rights. Here is a peek at the data:
-
-
+I found the data on The Civil Rights Project (https://www.civilrightsproject.ucla.edu/) who aim to renew the civil rights movement by creating a deeper understanding of the disparities. This data is collected and maintained by The Civil Rights Data Collection (https://ocrdata.ed.gov/). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education's Office for Civil Rights. I will be using *Referrals and Arrests* dataset which shows a record of students' referrals and law enforcement interention. Here is a peek at the data:
 ```{r}
 # Load necessary packages
 library(tidyverse)
 # Stage the data
 refAndArrest <- read.csv("Referrals and Arrests.csv")
-```
-
-
-```{r}
+# Start data exploration 
 glimpse(refAndArrest)
 ```
+There are 97, 632 cases in this dataset containing 84 variables. Each case represents a public school. I plan to use the following variables:
 
-
+- *SCH_DISCWODIS_REF_HI_M* - Students without disabilities who were referred to a law enforcement agency or official: Hispanic Male
+- *SCH_DISCWODIS_REF_HI_F* - Students without disabilities who were referred to a law enforcement agency or official: Hispanic Female
+- *SCH_DISCWODIS_REF_AM_M *- Students without disabilities who were referred to a law enforcement agency or official: American Indian/Alaska Native Male
+- *SCH_DISCWODIS_REF_AM_F* - Students without disabilities who were referred to a law enforcement agency or official: American Indian/Alaska Native Female
+- *SCH_DISCWODIS_REF_AS_M* - Students without disabilities who were referred to a law enforcement agency or official: Asian Male
+- *SCH_DISCWODIS_REF_AS_F* - Students without disabilities who were referred to a law enforcement agency or official: Asian Female
+- *SCH_DISCWODIS_REF_HP_M* - Students without disabilities who were referred to a law enforcement agency or official: Native Hawaiian/Pacific Islander Male
+- *SCH_DISCWODIS_REF_HP_F* - Students without disabilities who were referred to a law enforcement agency or official: Native Hawaiian/Pacific Islander Female
+- *SCH_DISCWODIS_REF_BL_M* - Students without disabilities who were referred to a law enforcement agency or official: Black Male
+- *SCH_DISCWODIS_REF_BL_F* - Students without disabilities who were referred to a law enforcement agency or official: Black Female
+- *SCH_DISCWODIS_REF_WH_M* - Students without disabilities who were referred to a law enforcement agency or official: White Male
+- *SCH_DISCWODIS_REF_WH_F* - Students without disabilities who were referred to a law enforcement agency or official: White Female
+- *SCH_DISCWODIS_REF_TR_M* - Students without disabilities who were referred to a law enforcement agency or official: Two or More Races Male
+- *SCH_DISCWODIS_REF_TR_F* - Students without disabilities who were referred to a law enforcement agency or official: Two or More Races Female
+- *SCH_DISCWODIS_ARR_HI_M* - Students without disabilities who received a school-related arrest: Hispanic Male
+- *SCH_DISCWODIS_ARR_HI_F* - Students without disabilities who received a school-related arrest: Hispanic Female
+- *SCH_DISCWODIS_ARR_AM_M* - Students without disabilities who received a school-related arrest: American Indian/Alaska Native Male
+- *SCH_DISCWODIS_ARR_AM_F* - Students without disabilities who received a school-related arrest: American Indian/Alaska Native Female
+- *SCH_DISCWODIS_ARR_AS_M* - Students without disabilities who received a school-related arrest: Asian Male
+- *SCH_DISCWODIS_ARR_AS_F* - Students without disabilities who received a school-related arrest: Asian Female
+- *SCH_DISCWODIS_ARR_HP_M* - Students without disabilities who received a school-related arrest: Native Hawaiian/Pacific Islander Male
+- *SCH_DISCWODIS_ARR_HP_F* - Students without disabilities who received a school-related arrest: Native Hawaiian/Pacific Islander Female
+- *SCH_DISCWODIS_ARR_BL_M* - Students without disabilities who received a school-related arrest: Black Male
+- *SCH_DISCWODIS_ARR_BL_F* - Students without disabilities who received a school-related arrest: Black Female
+- *SCH_DISCWODIS_ARR_WH_M* - Students without disabilities who received a school-related arrest: White Male
+- *SCH_DISCWODIS_ARR_WH_F* - Students without disabilities who received a school-related arrest: White Female
+- *SCH_DISCWODIS_ARR_TR_M* - Students without disabilities who received a school-related arrest: Two or More Races Male
+- *SCH_DISCWODIS_ARR_TR_F* - Students without disabilities who received a school-related arrest: Two or More Races Female
 
 ### Explore Intuition
+First, I will create a new data frame containing just the variables that I need.
+```{r}
+cleanedrefAndArrest
+```
 
 
 ### TWO Data Sources

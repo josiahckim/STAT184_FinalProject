@@ -1764,22 +1764,11 @@ summary {
 <!-- rnb-text-begin -->
 <div id="guiding-question" class="section level3">
 <h3>Guiding Question</h3>
-<p>Do black students face harsher/more punishment than their white counterparts within the public school system?</p>
+<p>Do black students face harsher/more punishment than their counterparts within the public school system?</p>
 </div>
 <div id="become-acquainted-with-the-data" class="section level3">
 <h3>Become Acquainted with the Data</h3>
-<p>I found the data on The Civil Rights Project (<a href="https://www.civilrightsproject.ucla.edu/" class="uri">https://www.civilrightsproject.ucla.edu/</a>). This data is collected and maintained by The Civil Rights Data Collection (<a href="https://ocrdata.ed.gov/" class="uri">https://ocrdata.ed.gov/</a>). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education’s Office for Civil Rights. Here is a peek at the data:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIG5lY2Vzc2FyeSBwYWNrYWdlc1xubGlicmFyeSh0aWR5dmVyc2UpXG4jIFN0YWdlIHRoZSBkYXRhXG5yZWZBbmRBcnJlc3QgPC0gcmVhZC5jc3YoXCJSZWZlcnJhbHMgYW5kIEFycmVzdHMuY3N2XCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code># Load necessary packages
-library(tidyverse)
-# Stage the data
-refAndArrest &lt;- read.csv(&quot;Referrals and Arrests.csv&quot;)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p>I found the data on The Civil Rights Project (<a href="https://www.civilrightsproject.ucla.edu/" class="uri">https://www.civilrightsproject.ucla.edu/</a>) who aim to renew the civil rights movement by creating a deeper understanding of the disparities. This data is collected and maintained by The Civil Rights Data Collection (<a href="https://ocrdata.ed.gov/" class="uri">https://ocrdata.ed.gov/</a>). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education’s Office for Civil Rights. I will be using <em>Referrals and Arrests</em> dataset which shows a record of students’ referrals and law enforcement interention. Here is a peek at the data:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xpbXBzZShyZWZBbmRBcnJlc3QpXG5gYGAifQ== -->
@@ -1875,16 +1864,55 @@ $ SCH_DISCWDIS_ARR_504_F     [3m[38;5;246m&lt;int&gt;[39m[23m -9, -9, 0, -9,
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>There are 97, 632 cases in this dataset containing 84 variables. Each case represents a public school. I plan to use the following variables:</p>
+<ul>
+<li><em>SCH_DISCWODIS_REF_HI_M</em> - Students without disabilities who were referred to a law enforcement agency or official: Hispanic Male</li>
+<li><em>SCH_DISCWODIS_REF_HI_F</em> - Students without disabilities who were referred to a law enforcement agency or official: Hispanic Female</li>
+<li><em>SCH_DISCWODIS_REF_AM_M </em>- Students without disabilities who were referred to a law enforcement agency or official: American Indian/Alaska Native Male</li>
+<li><em>SCH_DISCWODIS_REF_AM_F</em> - Students without disabilities who were referred to a law enforcement agency or official: American Indian/Alaska Native Female</li>
+<li><em>SCH_DISCWODIS_REF_AS_M</em> - Students without disabilities who were referred to a law enforcement agency or official: Asian Male</li>
+<li><em>SCH_DISCWODIS_REF_AS_F</em> - Students without disabilities who were referred to a law enforcement agency or official: Asian Female</li>
+<li><em>SCH_DISCWODIS_REF_HP_M</em> - Students without disabilities who were referred to a law enforcement agency or official: Native Hawaiian/Pacific Islander Male</li>
+<li><em>SCH_DISCWODIS_REF_HP_F</em> - Students without disabilities who were referred to a law enforcement agency or official: Native Hawaiian/Pacific Islander Female</li>
+<li><em>SCH_DISCWODIS_REF_BL_M</em> - Students without disabilities who were referred to a law enforcement agency or official: Black Male</li>
+<li><em>SCH_DISCWODIS_REF_BL_F</em> - Students without disabilities who were referred to a law enforcement agency or official: Black Female</li>
+<li><em>SCH_DISCWODIS_REF_WH_M</em> - Students without disabilities who were referred to a law enforcement agency or official: White Male</li>
+<li><em>SCH_DISCWODIS_REF_WH_F</em> - Students without disabilities who were referred to a law enforcement agency or official: White Female</li>
+<li><em>SCH_DISCWODIS_REF_TR_M</em> - Students without disabilities who were referred to a law enforcement agency or official: Two or More Races Male</li>
+<li><em>SCH_DISCWODIS_REF_TR_F</em> - Students without disabilities who were referred to a law enforcement agency or official: Two or More Races Female</li>
+<li><em>SCH_DISCWODIS_ARR_HI_M</em> - Students without disabilities who received a school-related arrest: Hispanic Male</li>
+<li><em>SCH_DISCWODIS_ARR_HI_F</em> - Students without disabilities who received a school-related arrest: Hispanic Female</li>
+<li><em>SCH_DISCWODIS_ARR_AM_M</em> - Students without disabilities who received a school-related arrest: American Indian/Alaska Native Male</li>
+<li><em>SCH_DISCWODIS_ARR_AM_F</em> - Students without disabilities who received a school-related arrest: American Indian/Alaska Native Female</li>
+<li><em>SCH_DISCWODIS_ARR_AS_M</em> - Students without disabilities who received a school-related arrest: Asian Male</li>
+<li><em>SCH_DISCWODIS_ARR_AS_F</em> - Students without disabilities who received a school-related arrest: Asian Female</li>
+<li><em>SCH_DISCWODIS_ARR_HP_M</em> - Students without disabilities who received a school-related arrest: Native Hawaiian/Pacific Islander Male</li>
+<li><em>SCH_DISCWODIS_ARR_HP_F</em> - Students without disabilities who received a school-related arrest: Native Hawaiian/Pacific Islander Female</li>
+<li><em>SCH_DISCWODIS_ARR_BL_M</em> - Students without disabilities who received a school-related arrest: Black Male</li>
+<li><em>SCH_DISCWODIS_ARR_BL_F</em> - Students without disabilities who received a school-related arrest: Black Female</li>
+<li><em>SCH_DISCWODIS_ARR_WH_M</em> - Students without disabilities who received a school-related arrest: White Male</li>
+<li><em>SCH_DISCWODIS_ARR_WH_F</em> - Students without disabilities who received a school-related arrest: White Female</li>
+<li><em>SCH_DISCWODIS_ARR_TR_M</em> - Students without disabilities who received a school-related arrest: Two or More Races Male</li>
+<li><em>SCH_DISCWODIS_ARR_TR_F</em> - Students without disabilities who received a school-related arrest: Two or More Races Female</li>
+</ul>
 </div>
 <div id="explore-intuition" class="section level3">
 <h3>Explore Intuition</h3>
+<p>First, I will create a new data frame containing just the variables that I need.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2xlYW5lZHJlZkFuZEFycmVzdFxuYGBgIn0= -->
+<pre class="r"><code>cleanedrefAndArrest</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 </div>
 <div id="two-data-sources" class="section level3">
 <h3>TWO Data Sources</h3>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgUHJvamVjdCBQcmVpbWluYXJ5IEVEQSIKYXV0aG9yOiAiSm9zaWFoIEtpbSIKZGF0ZTogIjEzIE5vdmVtYmVyIDIwMjAiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIyBHdWlkaW5nIFF1ZXN0aW9uCkRvIGJsYWNrIHN0dWRlbnRzIGZhY2UgaGFyc2hlci9tb3JlIHB1bmlzaG1lbnQgdGhhbiB0aGVpciB3aGl0ZSBjb3VudGVycGFydHMgd2l0aGluIHRoZSBwdWJsaWMgc2Nob29sIHN5c3RlbT8gIAoKCiMjIyBCZWNvbWUgQWNxdWFpbnRlZCB3aXRoIHRoZSBEYXRhCkkgZm91bmQgdGhlIGRhdGEgb24gVGhlIENpdmlsIFJpZ2h0cyBQcm9qZWN0IChodHRwczovL3d3dy5jaXZpbHJpZ2h0c3Byb2plY3QudWNsYS5lZHUvKS4gVGhpcyBkYXRhIGlzIGNvbGxlY3RlZCBhbmQgbWFpbnRhaW5lZCBieSBUaGUgQ2l2aWwgUmlnaHRzIERhdGEgQ29sbGVjdGlvbiAoaHR0cHM6Ly9vY3JkYXRhLmVkLmdvdi8pLiBFdmVyeSBvdGhlciB5ZWFyLCBhbGwgcHVibGljIHNjaG9vbHMgYXJlIHJlcXVpcmVkIHRvIHN1Ym1pdCBhIHJlcG9uc2UgdG8gYSBzdXJ2ZXkgdG8gdGhlIFUuUy4gRGVwYXJ0bWVudCBvZiBFZHVjYXRpb24ncyBPZmZpY2UgZm9yIENpdmlsIFJpZ2h0cy4gSGVyZSBpcyBhIHBlZWsgYXQgdGhlIGRhdGE6CgoKYGBge3J9CiMgTG9hZCBuZWNlc3NhcnkgcGFja2FnZXMKbGlicmFyeSh0aWR5dmVyc2UpCiMgU3RhZ2UgdGhlIGRhdGEKcmVmQW5kQXJyZXN0IDwtIHJlYWQuY3N2KCJSZWZlcnJhbHMgYW5kIEFycmVzdHMuY3N2IikKYGBgCgoKYGBge3J9CmdsaW1wc2UocmVmQW5kQXJyZXN0KQpgYGAKCgoKIyMjIEV4cGxvcmUgSW50dWl0aW9uCgoKIyMjIFRXTyBEYXRhIFNvdXJjZXMK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmluYWwgUHJvamVjdCBQcmVpbWluYXJ5IEVEQSIKYXV0aG9yOiAiSm9zaWFoIEtpbSIKZGF0ZTogIjEzIE5vdmVtYmVyIDIwMjAiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIyBHdWlkaW5nIFF1ZXN0aW9uCkRvIGJsYWNrIHN0dWRlbnRzIGZhY2UgaGFyc2hlci9tb3JlIHB1bmlzaG1lbnQgdGhhbiB0aGVpciBjb3VudGVycGFydHMgd2l0aGluIHRoZSBwdWJsaWMgc2Nob29sIHN5c3RlbT8gIAoKCiMjIyBCZWNvbWUgQWNxdWFpbnRlZCB3aXRoIHRoZSBEYXRhCkkgZm91bmQgdGhlIGRhdGEgb24gVGhlIENpdmlsIFJpZ2h0cyBQcm9qZWN0IChodHRwczovL3d3dy5jaXZpbHJpZ2h0c3Byb2plY3QudWNsYS5lZHUvKSB3aG8gYWltIHRvIHJlbmV3IHRoZSBjaXZpbCByaWdodHMgbW92ZW1lbnQgYnkgY3JlYXRpbmcgYSBkZWVwZXIgdW5kZXJzdGFuZGluZyBvZiB0aGUgZGlzcGFyaXRpZXMuIFRoaXMgZGF0YSBpcyBjb2xsZWN0ZWQgYW5kIG1haW50YWluZWQgYnkgVGhlIENpdmlsIFJpZ2h0cyBEYXRhIENvbGxlY3Rpb24gKGh0dHBzOi8vb2NyZGF0YS5lZC5nb3YvKS4gRXZlcnkgb3RoZXIgeWVhciwgYWxsIHB1YmxpYyBzY2hvb2xzIGFyZSByZXF1aXJlZCB0byBzdWJtaXQgYSByZXBvbnNlIHRvIGEgc3VydmV5IHRvIHRoZSBVLlMuIERlcGFydG1lbnQgb2YgRWR1Y2F0aW9uJ3MgT2ZmaWNlIGZvciBDaXZpbCBSaWdodHMuIEkgd2lsbCBiZSB1c2luZyAqUmVmZXJyYWxzIGFuZCBBcnJlc3RzKiBkYXRhc2V0IHdoaWNoIHNob3dzIGEgcmVjb3JkIG9mIHN0dWRlbnRzJyByZWZlcnJhbHMgYW5kIGxhdyBlbmZvcmNlbWVudCBpbnRlcmVudGlvbi4gSGVyZSBpcyBhIHBlZWsgYXQgdGhlIGRhdGE6CmBgYHtyfQojIExvYWQgbmVjZXNzYXJ5IHBhY2thZ2VzCmxpYnJhcnkodGlkeXZlcnNlKQojIFN0YWdlIHRoZSBkYXRhCnJlZkFuZEFycmVzdCA8LSByZWFkLmNzdigiUmVmZXJyYWxzIGFuZCBBcnJlc3RzLmNzdiIpCiMgU3RhcnQgZGF0YSBleHBsb3JhdGlvbiAKZ2xpbXBzZShyZWZBbmRBcnJlc3QpCmBgYApUaGVyZSBhcmUgOTcsIDYzMiBjYXNlcyBpbiB0aGlzIGRhdGFzZXQgY29udGFpbmluZyA4NCB2YXJpYWJsZXMuIEVhY2ggY2FzZSByZXByZXNlbnRzIGEgcHVibGljIHNjaG9vbC4gSSBwbGFuIHRvIHVzZSB0aGUgZm9sbG93aW5nIHZhcmlhYmxlczoKCi0gKlNDSF9ESVNDV09ESVNfUkVGX0hJX00qIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBIaXNwYW5pYyBNYWxlCi0gKlNDSF9ESVNDV09ESVNfUkVGX0hJX0YqIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBIaXNwYW5pYyBGZW1hbGUKLSAqU0NIX0RJU0NXT0RJU19SRUZfQU1fTSAqLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gd2VyZSByZWZlcnJlZCB0byBhIGxhdyBlbmZvcmNlbWVudCBhZ2VuY3kgb3Igb2ZmaWNpYWw6IEFtZXJpY2FuIEluZGlhbi9BbGFza2EgTmF0aXZlIE1hbGUKLSAqU0NIX0RJU0NXT0RJU19SRUZfQU1fRiogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gd2VyZSByZWZlcnJlZCB0byBhIGxhdyBlbmZvcmNlbWVudCBhZ2VuY3kgb3Igb2ZmaWNpYWw6IEFtZXJpY2FuIEluZGlhbi9BbGFza2EgTmF0aXZlIEZlbWFsZQotICpTQ0hfRElTQ1dPRElTX1JFRl9BU19NKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyB3ZXJlIHJlZmVycmVkIHRvIGEgbGF3IGVuZm9yY2VtZW50IGFnZW5jeSBvciBvZmZpY2lhbDogQXNpYW4gTWFsZQotICpTQ0hfRElTQ1dPRElTX1JFRl9BU19GKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyB3ZXJlIHJlZmVycmVkIHRvIGEgbGF3IGVuZm9yY2VtZW50IGFnZW5jeSBvciBvZmZpY2lhbDogQXNpYW4gRmVtYWxlCi0gKlNDSF9ESVNDV09ESVNfUkVGX0hQX00qIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBOYXRpdmUgSGF3YWlpYW4vUGFjaWZpYyBJc2xhbmRlciBNYWxlCi0gKlNDSF9ESVNDV09ESVNfUkVGX0hQX0YqIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBOYXRpdmUgSGF3YWlpYW4vUGFjaWZpYyBJc2xhbmRlciBGZW1hbGUKLSAqU0NIX0RJU0NXT0RJU19SRUZfQkxfTSogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gd2VyZSByZWZlcnJlZCB0byBhIGxhdyBlbmZvcmNlbWVudCBhZ2VuY3kgb3Igb2ZmaWNpYWw6IEJsYWNrIE1hbGUKLSAqU0NIX0RJU0NXT0RJU19SRUZfQkxfRiogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gd2VyZSByZWZlcnJlZCB0byBhIGxhdyBlbmZvcmNlbWVudCBhZ2VuY3kgb3Igb2ZmaWNpYWw6IEJsYWNrIEZlbWFsZQotICpTQ0hfRElTQ1dPRElTX1JFRl9XSF9NKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyB3ZXJlIHJlZmVycmVkIHRvIGEgbGF3IGVuZm9yY2VtZW50IGFnZW5jeSBvciBvZmZpY2lhbDogV2hpdGUgTWFsZQotICpTQ0hfRElTQ1dPRElTX1JFRl9XSF9GKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyB3ZXJlIHJlZmVycmVkIHRvIGEgbGF3IGVuZm9yY2VtZW50IGFnZW5jeSBvciBvZmZpY2lhbDogV2hpdGUgRmVtYWxlCi0gKlNDSF9ESVNDV09ESVNfUkVGX1RSX00qIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBUd28gb3IgTW9yZSBSYWNlcyBNYWxlCi0gKlNDSF9ESVNDV09ESVNfUkVGX1RSX0YqIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHdlcmUgcmVmZXJyZWQgdG8gYSBsYXcgZW5mb3JjZW1lbnQgYWdlbmN5IG9yIG9mZmljaWFsOiBUd28gb3IgTW9yZSBSYWNlcyBGZW1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfSElfTSogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IEhpc3BhbmljIE1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfSElfRiogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IEhpc3BhbmljIEZlbWFsZQotICpTQ0hfRElTQ1dPRElTX0FSUl9BTV9NKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyByZWNlaXZlZCBhIHNjaG9vbC1yZWxhdGVkIGFycmVzdDogQW1lcmljYW4gSW5kaWFuL0FsYXNrYSBOYXRpdmUgTWFsZQotICpTQ0hfRElTQ1dPRElTX0FSUl9BTV9GKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyByZWNlaXZlZCBhIHNjaG9vbC1yZWxhdGVkIGFycmVzdDogQW1lcmljYW4gSW5kaWFuL0FsYXNrYSBOYXRpdmUgRmVtYWxlCi0gKlNDSF9ESVNDV09ESVNfQVJSX0FTX00qIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHJlY2VpdmVkIGEgc2Nob29sLXJlbGF0ZWQgYXJyZXN0OiBBc2lhbiBNYWxlCi0gKlNDSF9ESVNDV09ESVNfQVJSX0FTX0YqIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHJlY2VpdmVkIGEgc2Nob29sLXJlbGF0ZWQgYXJyZXN0OiBBc2lhbiBGZW1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfSFBfTSogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IE5hdGl2ZSBIYXdhaWlhbi9QYWNpZmljIElzbGFuZGVyIE1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfSFBfRiogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IE5hdGl2ZSBIYXdhaWlhbi9QYWNpZmljIElzbGFuZGVyIEZlbWFsZQotICpTQ0hfRElTQ1dPRElTX0FSUl9CTF9NKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyByZWNlaXZlZCBhIHNjaG9vbC1yZWxhdGVkIGFycmVzdDogQmxhY2sgTWFsZQotICpTQ0hfRElTQ1dPRElTX0FSUl9CTF9GKiAtIFN0dWRlbnRzIHdpdGhvdXQgZGlzYWJpbGl0aWVzIHdobyByZWNlaXZlZCBhIHNjaG9vbC1yZWxhdGVkIGFycmVzdDogQmxhY2sgRmVtYWxlCi0gKlNDSF9ESVNDV09ESVNfQVJSX1dIX00qIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHJlY2VpdmVkIGEgc2Nob29sLXJlbGF0ZWQgYXJyZXN0OiBXaGl0ZSBNYWxlCi0gKlNDSF9ESVNDV09ESVNfQVJSX1dIX0YqIC0gU3R1ZGVudHMgd2l0aG91dCBkaXNhYmlsaXRpZXMgd2hvIHJlY2VpdmVkIGEgc2Nob29sLXJlbGF0ZWQgYXJyZXN0OiBXaGl0ZSBGZW1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfVFJfTSogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IFR3byBvciBNb3JlIFJhY2VzIE1hbGUKLSAqU0NIX0RJU0NXT0RJU19BUlJfVFJfRiogLSBTdHVkZW50cyB3aXRob3V0IGRpc2FiaWxpdGllcyB3aG8gcmVjZWl2ZWQgYSBzY2hvb2wtcmVsYXRlZCBhcnJlc3Q6IFR3byBvciBNb3JlIFJhY2VzIEZlbWFsZQoKIyMjIEV4cGxvcmUgSW50dWl0aW9uCkZpcnN0LCBJIHdpbGwgY3JlYXRlIGEgbmV3IGRhdGEgZnJhbWUgY29udGFpbmluZyBqdXN0IHRoZSB2YXJpYWJsZXMgdGhhdCBJIG5lZWQuCmBgYHtyfQpjbGVhbmVkcmVmQW5kQXJyZXN0CmBgYAoKCiMjIyBUV08gRGF0YSBTb3VyY2VzCg==</div>
 
 
 

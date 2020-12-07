@@ -1,5 +1,5 @@
 ---
-title: "STAT 184: Final Project Preiminary EDA"
+title: "STAT 184: Final Project Preliminary EDA"
 author: "Josiah Kim"
 date: "15 November 2020"
 output: html_notebook
@@ -7,12 +7,12 @@ output: html_notebook
 ***
 
 ### Guiding Question
-Do black students face disproportioinate punishment compared to their whtie counterparts within the public school system?
+Do black students face disproportionate punishment compared to their white counterparts within the public school system?
 
 ***
 
 ### Become Acquainted with the Data
-I found the data on The Civil Rights Project (https://www.civilrightsproject.ucla.edu/) who aim to renew the civil rights movement by creating a deeper understanding of the disparities. This data is collected and maintained by The Civil Rights Data Collection (https://ocrdata.ed.gov/). Every other year, all public schools are required to submit a reponse to a survey to the U.S. Department of Education's Office for Civil Rights. I will be using *Referrals and Arrests* and *Enrollment* dataset which shows a record of students' referrals and law enforcement interention. Here is a peek of the data:
+I found the data on The Civil Rights Project (https://www.civilrightsproject.ucla.edu/) who aim to renew the civil rights movement by creating a deeper understanding of the disparities. This data is collected and maintained by The Civil Rights Data Collection (https://ocrdata.ed.gov/). Every other year, all public schools are required to submit a repose to a survey to the U.S. Department of Education's Office for Civil Rights. I will be using *Referrals and Arrests* and *Enrollment* data set which shows a record of students' referrals and law enforcement intervention. Here is a peek of the data:
 ```{r message=FALSE, warning=FALSE}
 # Load necessary packages
 library(tidyverse)
@@ -23,6 +23,7 @@ corPunishment <- read.csv("Corporal Punishment.csv")
 expulsions <- read.csv("Expulsions.csv")
 suspensions <- read.csv("Suspensions.csv")
 enrollment <- read.csv("Enrollment.csv")
+party <- read.csv("State_Party.csv")
 ```
 
 #### Data Exploration of *Referrals and Arrests*
@@ -34,7 +35,7 @@ ncol(refAndArrest)
 head(refAndArrest, 5)
 ```
 
-There are 97, 632 cases in this dataset containing 84 variables. Each case represents a public school. I plan to use the following variables:
+There are 97, 632 cases in this data set containing 84 variables. Each case represents a public school. I plan to use the following variables:
 
 - *SCHID*	- 5 Digit School Identification Code
 - *SCH_NAME*	- School Name
@@ -57,7 +58,7 @@ ncol(enrollment)
 head(enrollment, 5)
 ```
 
-Enrollment also contains 97,632 cases. There are also 123 variables in the original dataset. Each case represents the enrollment information of a public school. I plan to use these following variables:
+Enrollment also contains 97,632 cases. There are also 123 variables in the original data set. Each case represents the enrollment information of a public school. I plan to use these following variables:
 
 - *SCHID*	- 5 Digit School Identification Code
 - *SCH_ENR_BL_M* - 	Overall Student Enrollment: Black Male
@@ -96,7 +97,7 @@ head(cleanedrefAndArrest, 5)
 With both data frames reduced down to the variables I need, I can now join them using the *SCHID* and *SCH_NAME* as the join keys. The new data frame will be called *cleaned*. 
 ```{r}
 cleaned <- cleanedrefAndArrest %>% 
-  left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
+  left_join(cleanedenrollment, by = "SCH_NAME")
 
 head(cleaned, 5)
 ```
@@ -105,7 +106,7 @@ head(cleaned, 5)
 
 ### Explore Intuition
 
-First, we will take a peek at the summary statistics of our newly joined dataset.
+First, we will take a peek at the summary statistics of our newly joined data set.
 ```{r}
 summary(cleaned)
 ```
@@ -119,24 +120,14 @@ totals %>%
   ylab("Count") +
   xlab("Referrals and Arrests")
 ```
-We can see that more white students experience referrals and arrests. However, this does not control for the total number of students that are white or black that attend the public schools. Therefore, we cannot be confident that black students disproportionally recieve punishment within public schools. To account for proportionality, I will make a new variable that accounts for proportionality. 
+MY initial intution has been confirmed. We can see that more white students experience referrals and arrests. However, this does not control for the total number of students that are white or black that attend the public schools. Therefore, we cannot be confident that black students disproportionately receive punishment within public schools. To account for proportionality, I will make a new variable that accounts for proportionality. 
 ```{r}
 cleaned <- cleaned %>%
-  mutate(percentage_ref_bl_m = SCH_DISCWODIS_REF_BL_M/SCH_ENR_BL_M, 
-         percentage_ref_bl_f = SCH_DISCWODIS_REF_BL_F/SCH_ENR_BL_F,
-         percentage_ref_wh_m = SCH_DISCWODIS_REF_WH_M/SCH_ENR_WH_M,
-         percentage_ref_wh_f = SCH_DISCWODIS_REF_WH_F/SCH_ENR_WH_F,
-         percentage_arr_bl_m = SCH_DISCWODIS_ARR_BL_M/SCH_ENR_BL_M,
-         percentage_arr_bl_f = SCH_DISCWODIS_ARR_BL_F/SCH_ENR_BL_F,
-         percentage_arr_wh_m = SCH_DISCWODIS_ARR_WH_M/SCH_ENR_WH_M,
-         percentage_arr_wh_m = SCH_DISCWODIS_ARR_WH_M/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_REF_BL_M+SCH_DISCWODIS_REF_BL_F+SCH_DISCWODIS_ARR_BL_M+SCH_DISCWODIS_ARR_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_REF_WH_M+SCH_DISCWODIS_REF_WH_F+SCH_DISCWODIS_ARR_WH_M+SCH_DISCWODIS_ARR_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
+  mutate(total_bl = SCH_DISCWODIS_REF_BL_M + SCH_DISCWODIS_REF_BL_F + SCH_DISCWODIS_ARR_BL_M + SCH_DISCWODIS_ARR_BL_F, total_wh = SCH_DISCWODIS_REF_WH_M + SCH_DISCWODIS_REF_WH_F + SCH_DISCWODIS_ARR_WH_M + SCH_DISCWODIS_ARR_WH_M)
 ```
 Now that we have the values and variables for proportion, we can visualize it. 
 ```{r}
-totals2 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned$percentage_total_wh, na.rm = TRUE)*100))
+totals2 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned$total_bl, na.rm = TRUE)/sum(cleaned$SCH_ENR_BL_M+cleaned$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned$total_wh, na.rm = TRUE)/sum(cleaned$SCH_ENR_WH_M+cleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 refAndArrestGraph <- totals2 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -146,9 +137,9 @@ refAndArrestGraph <- totals2 %>%
 
 refAndArrestGraph
 ```
-My intution that black students are disproportionately affected by punishment in public schools seems more likely looking at this bar graph. It looks like 0.32% of white students have recieved punishment in the form of referrals and arrests of some kind. However, at almost double, 0.62% of their black counter parts have received punishment in the form of referrals and arrests. 
+My intuition that black students are disproportionately affected by punishment in public schools seems more likely looking at this bar graph. It looks like 0.32% of white students have received punishment in the form of referrals and arrests of some kind. However, at more than double, 0.72% of their black counter parts have received punishment in the form of referrals and arrests. 
 
-This makes me curious about other types of punishments namely: Corporal Punishment, Expulsions and Suspensions. I will now analyze these new datasets, visually, in the same method as above. 
+This makes me curious about other types of punishments namely: Corporal Punishment, Expulsions and Suspensions. I will now analyze these new data sets, visually, in the same method as above. 
 
 ```{r}
 # Corporal Punishment 
@@ -164,16 +155,11 @@ cleanedcorPunishment$SCH_DISCWODIS_CORP_WH_F[cleanedcorPunishment$SCH_DISCWODIS_
 cleaned3 <- cleanedcorPunishment %>% 
   left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
 
-cleaned3 <- cleaned3 %>%
-  mutate(percentage_ref_bl_m = SCH_DISCWODIS_CORP_BL_M/SCH_ENR_BL_M, 
-         percentage_ref_bl_f = SCH_DISCWODIS_CORP_BL_F/SCH_ENR_BL_F,
-         percentage_ref_wh_m = SCH_DISCWODIS_CORP_WH_M/SCH_ENR_WH_M,
-         percentage_ref_wh_f = SCH_DISCWODIS_CORP_WH_F/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_CORP_BL_M+SCH_DISCWODIS_CORP_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_CORP_WH_M+SCH_DISCWODIS_CORP_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
+cleaned3 <- cleaned3 %>% 
+  mutate(total_bl = SCH_DISCWODIS_CORP_BL_M + SCH_DISCWODIS_CORP_BL_F, 
+         total_wh = SCH_DISCWODIS_CORP_WH_M + SCH_DISCWODIS_CORP_WH_F)
 
-totals3 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned3$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned3$percentage_total_wh, na.rm = TRUE)*100))
+totals3 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned3$total_bl, na.rm = TRUE)/sum(cleaned3$SCH_ENR_BL_M+cleaned3$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned3$total_wh, na.rm = TRUE)/sum(cleaned3$SCH_ENR_WH_M+cleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 corPunishmentGraph <- totals3 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -182,7 +168,6 @@ corPunishmentGraph <- totals3 %>%
   xlab("Corporal Punishment")
 
 ```
-
 
 
 ```{r}
@@ -199,16 +184,11 @@ cleanedexpulsions$SCH_DISCWODIS_EXPWE_WH_F[cleanedexpulsions$SCH_DISCWODIS_EXPWE
 cleaned4 <- cleanedexpulsions %>% 
   left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
 
-cleaned4 <- cleaned4 %>%
-  mutate(percentage_ref_bl_m = SCH_DISCWODIS_EXPWE_BL_M/SCH_ENR_BL_M, 
-         percentage_ref_bl_f = SCH_DISCWODIS_EXPWE_BL_F/SCH_ENR_BL_F,
-         percentage_ref_wh_m = SCH_DISCWODIS_EXPWE_WH_M/SCH_ENR_WH_M,
-         percentage_ref_wh_f = SCH_DISCWODIS_EXPWE_WH_F/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_EXPWE_BL_M+SCH_DISCWODIS_EXPWE_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_EXPWE_WH_M+SCH_DISCWODIS_EXPWE_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
+cleaned4 <- cleaned4 %>% 
+  mutate(total_bl = SCH_DISCWODIS_EXPWE_BL_M + SCH_DISCWODIS_EXPWE_BL_F, 
+         total_wh = SCH_DISCWODIS_EXPWE_WH_M + SCH_DISCWODIS_EXPWE_WH_F)
 
-totals4 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned4$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned4$percentage_total_wh, na.rm = TRUE)*100))
+totals4 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned4$total_bl, na.rm = TRUE)/sum(cleaned4$SCH_ENR_BL_M+cleaned4$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned4$total_wh, na.rm = TRUE)/sum(cleaned4$SCH_ENR_WH_M+cleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 expulsionGraph <- totals4 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -231,19 +211,11 @@ cleanedexpulsionsWOE$SCH_DISCWODIS_EXPWOE_BL_F[cleanedexpulsionsWOE$SCH_DISCWODI
 cleanedexpulsionsWOE$SCH_DISCWODIS_EXPWOE_WH_M[cleanedexpulsionsWOE$SCH_DISCWODIS_EXPWOE_WH_M < 0] <- 0 
 cleanedexpulsionsWOE$SCH_DISCWODIS_EXPWOE_WH_F[cleanedexpulsionsWOE$SCH_DISCWODIS_EXPWOE_WH_F < 0] <- 0 
 
-cleaned5 <- cleanedexpulsionsWOE %>% 
-  left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
+cleaned5 <- cleaned5 %>% 
+  mutate(total_bl = SCH_DISCWODIS_EXPWOE_BL_M + SCH_DISCWODIS_EXPWOE_BL_F, 
+         total_wh = SCH_DISCWODIS_EXPWOE_WH_M + SCH_DISCWODIS_EXPWOE_WH_F)
 
-cleaned5 <- cleaned5 %>%
-  mutate(percentage_ref_bl_m = SCH_DISCWODIS_EXPWOE_BL_M/SCH_ENR_BL_M, 
-         percentage_ref_bl_f = SCH_DISCWODIS_EXPWOE_BL_F/SCH_ENR_BL_F,
-         percentage_ref_wh_m = SCH_DISCWODIS_EXPWOE_WH_M/SCH_ENR_WH_M,
-         percentage_ref_wh_f = SCH_DISCWODIS_EXPWOE_WH_F/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_EXPWOE_BL_M+SCH_DISCWODIS_EXPWOE_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_EXPWOE_WH_M+SCH_DISCWODIS_EXPWOE_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
-
-totals5 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned5$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned5$percentage_total_wh, na.rm = TRUE)*100))
+totals5 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned5$total_bl, na.rm = TRUE)/sum(cleaned5$SCH_ENR_BL_M+cleaned5$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned5$total_wh, na.rm = TRUE)/sum(cleaned5$SCH_ENR_WH_M+cleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 expulsionGraphWOE <- totals5 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -268,16 +240,11 @@ cleanedsuspensions$SCH_DISCWODIS_ISS_WH_F[cleanedsuspensions$SCH_DISCWODIS_ISS_W
 cleaned6 <- cleanedsuspensions %>% 
   left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
 
-cleaned6 <- cleaned6 %>%
-  mutate(percentage_ISS_bl_m = SCH_DISCWODIS_ISS_BL_M/SCH_ENR_BL_M, 
-         percentage_ISS_bl_f = SCH_DISCWODIS_ISS_BL_F/SCH_ENR_BL_F,
-         percentage_ISS_wh_m = SCH_DISCWODIS_ISS_WH_M/SCH_ENR_WH_M,
-         percentage_ISS_wh_f = SCH_DISCWODIS_ISS_WH_F/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_ISS_BL_M+SCH_DISCWODIS_ISS_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_ISS_WH_M+SCH_DISCWODIS_ISS_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
+cleaned6 <- cleaned6 %>% 
+  mutate(total_bl = SCH_DISCWODIS_ISS_BL_M + SCH_DISCWODIS_ISS_BL_F, 
+         total_wh = SCH_DISCWODIS_ISS_WH_M + SCH_DISCWODIS_ISS_WH_F)
 
-totals6 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned6$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned6$percentage_total_wh, na.rm = TRUE)*100))
+totals6 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned6$total_bl, na.rm = TRUE)/sum(cleaned6$SCH_ENR_BL_M+cleaned6$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned6$total_wh, na.rm = TRUE)/sum(cleaned6$SCH_ENR_WH_M+cleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 suspensiongraph <- totals6 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -308,19 +275,9 @@ cleaned8 <- cleanedsuspensionsOOS %>%
   left_join(cleanedenrollment, by = c("SCHID", "SCH_NAME"))
 
 cleaned8 <- cleaned8 %>%
-  mutate(percentage_SINGOOS_bl_m = SCH_DISCWODIS_SINGOOS_BL_M/SCH_ENR_BL_M, 
-         percentage_SINGOOS_bl_f = SCH_DISCWODIS_SINGOOS_BL_F/SCH_ENR_BL_F,
-         percentage_SINGOOS_wh_m = SCH_DISCWODIS_SINGOOS_WH_M/SCH_ENR_WH_M,
-         percentage_SINGOOS_wh_f = SCH_DISCWODIS_SINGOOS_WH_F/SCH_ENR_WH_F,
-         percentage_MULTOOS_bl_m = SCH_DISCWODIS_MULTOOS_BL_M/SCH_ENR_BL_M, 
-         percentage_MULTOOS_bl_f = SCH_DISCWODIS_MULTOOS_BL_F/SCH_ENR_BL_F,
-         percentage_MULTOOS_wh_m = SCH_DISCWODIS_MULTOOS_WH_M/SCH_ENR_WH_M,
-         percentage_MULTOOS_wh_f = SCH_DISCWODIS_MULTOOS_WH_F/SCH_ENR_WH_F,
-         percentage_total_bl = (SCH_DISCWODIS_SINGOOS_BL_M+SCH_DISCWODIS_SINGOOS_BL_F+SCH_DISCWODIS_MULTOOS_BL_M+SCH_DISCWODIS_MULTOOS_BL_F)/(SCH_ENR_BL_M+SCH_ENR_BL_F),
-         percentage_total_wh = (SCH_DISCWODIS_SINGOOS_WH_M+SCH_DISCWODIS_SINGOOS_WH_F+SCH_DISCWODIS_MULTOOS_WH_M+SCH_DISCWODIS_MULTOOS_WH_F)/(SCH_ENR_WH_M+SCH_ENR_WH_F)
-         ) 
+  mutate(total_bl = SCH_DISCWODIS_SINGOOS_BL_M + SCH_DISCWODIS_SINGOOS_BL_F + SCH_DISCWODIS_MULTOOS_BL_M + SCH_DISCWODIS_MULTOOS_BL_F, total_wh = SCH_DISCWODIS_SINGOOS_WH_M + SCH_DISCWODIS_SINGOOS_WH_F + SCH_DISCWODIS_MULTOOS_WH_M + SCH_DISCWODIS_MULTOOS_WH_F)
 
-totals8 <- data.frame(names = c("Black Students","White Students"), avg = c(mean(cleaned8$percentage_total_bl, na.rm = TRUE)*100, mean(cleaned8$percentage_total_wh, na.rm = TRUE)*100))
+totals8 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(cleaned8$total_bl, na.rm = TRUE)/sum(cleaned8$SCH_ENR_BL_M+cleaned8$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(cleaned8$total_wh, na.rm = TRUE)/sum(cleaned8$SCH_ENR_WH_M+cleaned8$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 suspensiongraphOOS <- totals8 %>%
   ggplot(aes(x = names, y = avg)) +
@@ -332,11 +289,12 @@ suspensiongraphOOS <- totals8 %>%
 ```
 Now that we have the graphs, let's compare them all side-by-side.
 
+
 ```{r}
 grid.arrange(refAndArrestGraph, corPunishmentGraph, expulsionGraph, expulsionGraphWOE, suspensiongraph, suspensiongraphOOS)
 ```
 
-Let's re-define punishment as a blanket term for referrals, arrests, corporal punishment, expulsions (of both types), and suspensions (of both types). We can now visualize the total proportion of punishment recieved by both black and white students. 
+Let's re-define punishment as a blanket term for referrals, arrests, corporal punishment, expulsions (of both types), and suspensions (of both types). We can now visualize the total proportion of punishment received by both black and white students. 
 
 ```{r}
 # Columns to merge "by"
@@ -357,17 +315,71 @@ allCleaned <- allCleaned %>%
 totals9 <- data.frame(names = c("Black Students","White Students"), avg = c((sum(allCleaned$total_bl, na.rm = TRUE)/sum(allCleaned$SCH_ENR_BL_M + allCleaned$SCH_ENR_BL_F, na.rm = TRUE))*100, (sum(allCleaned$total_wh, na.rm = TRUE)/sum(allCleaned$SCH_ENR_WH_M + allCleaned$SCH_ENR_WH_F, na.rm = TRUE))*100))
 
 totalGraph <- totals9 %>%
-  ggplot(aes(x = names, y = avg)) +
+  ggplot(aes(x = names, y = avg)) + 
   geom_bar(stat = "identity") +
   ylab("Proportion") +
   xlab("Punishment")
 
 totalGraph
-
 ```
 
-This graph illustrates the dispropotionate punishment of black students verses white students in the public school system. About 18 percent of black students faced punishment compared to 6 percent of their white counterparts.
+This graph illustrates the disproportionate punishment of black students verses white students in the public school system. About 18 percent of black students faced punishment compared to 6 percent of their white counterparts.
+
+Now, I want to take a look at which states most dispropotionately... 
+```{r}
+states <- enrollment[1:6]
+
+mergeCols <- c("SCHID", "SCH_NAME")
+allCleaned_States <- states %>%
+  left_join(allCleaned, by = mergeCols)
+
+allCleaned_States <- allCleaned_States %>%
+  mutate(proportion_bl = total_bl/(SCH_ENR_BL_M+SCH_ENR_BL_F), proportion_wh = total_wh/(SCH_ENR_WH_M+SCH_ENR_WH_F), proportion_bl_likely = proportion_bl - proportion_wh)
+
+morelikely_State <- allCleaned_States %>%
+  group_by(LEA_STATE) %>%
+  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)) %>%
+  arrange(-desc(mean_morelikely))
+
+morelikely_State %>%
+  mutate(LEA_STATE = factor(LEA_STATE, levels = LEA_STATE)) %>%
+  ggplot(aes(x = LEA_STATE, y = mean_morelikely)) +
+  geom_bar(stat = "identity")
+
+```
+Political party
+```{r}
+party <- party %>%
+  mutate(state = toupper(state))
+
+morelikely_State <- allCleaned_States %>%
+  select(LEA_STATE, LEA_STATE_NAME, proportion_bl_likely) %>%
+  group_by(LEA_STATE_NAME) %>%
+  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)) %>%
+  left_join(party, by = c("LEA_STATE_NAME" = "state")) %>%
+  arrange(-desc(mean_morelikely))
+
+morelikely_State %>%
+  mutate(LEA_STATE_NAME = factor(LEA_STATE_NAME, levels = LEA_STATE_NAME)) %>%
+  factor(party, levels = c("Solid Dem", "Lean Dem", "Competetive","Lean Rep", "Solid Rep"), ordered =  TRUE) %>%
+  ggplot(aes(x = LEA_STATE_NAME, y = mean_morelikely, fill = party)) +
+  geom_bar(stat = "identity")
+```
 
 
 
+```{r}
+allCleaned_States %>%
+  ggplot(aes(x = LEA_STATE, y = proportion_bl_likely)) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+```{r}
+allCleaned_States %>%
+  ggplot() +
+  geom_density(aes(x = LE)) +
+  facet_wrap(~LEA_STATE)
+```
 

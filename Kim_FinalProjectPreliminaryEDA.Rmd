@@ -17,6 +17,7 @@ I found the data on The Civil Rights Project (https://www.civilrightsproject.ucl
 # Load necessary packages
 library(tidyverse)
 library(gridExtra)
+
 # Stage the data
 refAndArrest <- read.csv("Referrals and Arrests.csv")
 corPunishment <- read.csv("Corporal Punishment.csv")
@@ -141,7 +142,7 @@ My intuition that black students are disproportionately affected by punishment i
 
 This makes me curious about other types of punishments namely: Corporal Punishment, Expulsions and Suspensions. I will now analyze these new data sets, visually, in the same method as above. 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Corporal Punishment 
 cleanedcorPunishment <- 
   corPunishment[c("SCHID","SCH_NAME","SCH_DISCWODIS_CORP_BL_M","SCH_DISCWODIS_CORP_BL_F",
@@ -170,7 +171,7 @@ corPunishmentGraph <- totals3 %>%
 ```
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Expulsions (with Educational Services)
 cleanedexpulsions <- 
   expulsions[c("SCHID","SCH_NAME","SCH_DISCWODIS_EXPWE_BL_M","SCH_DISCWODIS_EXPWE_BL_F",
@@ -200,7 +201,7 @@ expulsionGraph <- totals4 %>%
 ```
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # ExpulsionsWOE (withOUT Educational Services)
 cleanedexpulsionsWOE <- 
   expulsions[c("SCHID","SCH_NAME","SCH_DISCWODIS_EXPWOE_BL_M","SCH_DISCWODIS_EXPWOE_BL_F",
@@ -226,7 +227,7 @@ expulsionGraphWOE <- totals5 %>%
 ```
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Suspensions (in-school)
 cleanedsuspensions <- 
   suspensions[c("SCHID","SCH_NAME","SCH_DISCWODIS_ISS_BL_M","SCH_DISCWODIS_ISS_BL_F",
@@ -325,8 +326,8 @@ totalGraph
 
 This graph illustrates the disproportionate punishment of black students verses white students in the public school system. About 18 percent of black students faced punishment compared to 6 percent of their white counterparts.
 
-Now, I want to take a look at which states most dispropotionately... 
-```{r}
+Now that we've seen the pattern from America as a whole, we want to narrow his down to states. 
+```{r message=FALSE, warning=FALSE}
 states <- enrollment[1:6]
 
 mergeCols <- c("SCHID", "SCH_NAME")
@@ -338,48 +339,73 @@ allCleaned_States <- allCleaned_States %>%
 
 morelikely_State <- allCleaned_States %>%
   group_by(LEA_STATE) %>%
-  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)) %>%
+  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)*100) %>%
+  filter(LEA_STATE != "PR") %>%
   arrange(-desc(mean_morelikely))
 
 morelikely_State %>%
   mutate(LEA_STATE = factor(LEA_STATE, levels = LEA_STATE)) %>%
   ggplot(aes(x = LEA_STATE, y = mean_morelikely)) +
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity") +
+  ggtitle("Likelihood for a State to Disproportionately Punish Black Students") +
+  xlab("State") +
+  ylab("Proportion") +
+  theme(axis.text=element_text(size=5))
 
 ```
-Political party
-```{r}
+I created a new variable called *mean_morelikely* which gives us the likelihood of a state to punish black student over white students. For example, Mississippi (all the way on the right) is more than 14% more likely to punish a black student over a white student. 
+
+Since we've narrowed out findings to the state level, we can map whatever characteristics to that state to show a possible correlation. In the next example, I joined a state's political party affiliation from 2017 (Democrat or Republican) from a Gallup Poll (https://news.gallup.com/poll/226643/2017-party-affiliation-state.aspx). This characteristic is shown through the color of the bars. 
+```{r message=FALSE, warning=FALSE}
 party <- party %>%
   mutate(state = toupper(state))
 
 morelikely_State <- allCleaned_States %>%
   select(LEA_STATE, LEA_STATE_NAME, proportion_bl_likely) %>%
   group_by(LEA_STATE_NAME) %>%
-  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)) %>%
+  summarise(mean_morelikely = mean(proportion_bl_likely, na.rm = TRUE)*100) %>%
   left_join(party, by = c("LEA_STATE_NAME" = "state")) %>%
+  filter(LEA_STATE_NAME != "PUERTO RICO") %>%
   arrange(-desc(mean_morelikely))
 
+morelikely_State$party<- factor(morelikely_State$party, c("Solid Dem", "Lean Dem", "Competitive", "Lean Rep", "Solid Rep"))
+morelikely_State$party <- factor(morelikely_State$party, levels = rev(levels(morelikely_State$party)))
+
 morelikely_State %>%
-  mutate(LEA_STATE_NAME = factor(LEA_STATE_NAME, levels = LEA_STATE_NAME)) %>%
-  factor(party, levels = c("Solid Dem", "Lean Dem", "Competetive","Lean Rep", "Solid Rep"), ordered =  TRUE) %>%
-  ggplot(aes(x = LEA_STATE_NAME, y = mean_morelikely, fill = party)) +
-  geom_bar(stat = "identity")
+  mutate(LEA_STATE_NAME = factor(LEA_STATE_NAME, levels = LEA_STATE_NAME))  %>%
+  ggplot(aes(x = LEA_STATE_NAME, y = mean_morelikely)) +
+  geom_bar(aes(fill = party), stat = "identity") +   
+  labs(title = "Likelihood for a State (Including Political Party) to \nDisproportionately Punish Black Students", x = "State" , y = "Proportion") +
+  scale_fill_manual(values = c("red","#CC6666","dark green","light blue","blue"))
 ```
-
-
+It looks like states that are "competitive" are the majority when it comes to the right half of the graph. The majority of the states on the left half of the graph tend to be more "democratic". 
 
 ```{r}
-allCleaned_States %>%
-  ggplot(aes(x = LEA_STATE, y = proportion_bl_likely)) +
-  geom_point() +
-  geom_smooth()
+morelikely_State %>%
+  mutate(LEA_STATE_NAME = factor(LEA_STATE_NAME, levels = LEA_STATE_NAME))  %>%
+  ggplot(aes(x = LEA_STATE_NAME, y = mean_morelikely)) +
+  geom_segment(aes(xend = LEA_STATE_NAME, yend = 0)) +   
+  geom_point(aes(color = party)) +
+  coord_flip() +
+  labs(title = "Likelihood for a State (Including Political Party) to \nDisproportionately Punish Black Students", x = "State" , y = "Proportion") + 
+  theme(axis.text=element_text(size=5))
 ```
+This graph would be better representation of the graph above for the viewer. The full state names are not cluttered and the segments are easier to follow visually. The point at the end of the segment not only precisely show proportion but also the party affiliaton of the state. 
+
+```{r message=FALSE, warning=FALSE}
+stateDiffs <- dist(morelikely_State)
+stateDiffs <- dist_setNames(stateDiffs, morelikely_State$LEA_STATE_NAME)
+cluster <- hclust(stateDiffs)
+plot(cluster, hang = -1, cex = 0.6)
+```
+In this example of clustering, we can see that the unsupervised learning was very intuitive. Arkansas and Mississippi are the closest to each other and it makes sense since they are the two states that are the most likely to disproportionately punish black students. 
 
 
-```{r}
-allCleaned_States %>%
-  ggplot() +
-  geom_density(aes(x = LE)) +
-  facet_wrap(~LEA_STATE)
-```
+***
+### Conclusion
+
+In terms of my guiding question, it seems as if black students face disproportionate punishment compared to their white counterparts within the public school system in the United States. I was surprised to see that every category of punishment was dispropotionate. Furthermore, it looks like every single state is more likely to punish black students than white students to some extend. 
+
+I would be interested to see how much further we can narrow down the geographic span of the analysis (school districts and counties). Also, I would interested in seeing the significance of this analysis through quantitative tests. 
+
 

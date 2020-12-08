@@ -1,7 +1,7 @@
 ---
-title: "STAT 184: Final Project Preliminary EDA"
+title: "STAT 184: Final Project"
 author: "Josiah Kim"
-date: "15 November 2020"
+date: "07 December 2020"
 output: html_notebook
 ---
 ***
@@ -121,7 +121,7 @@ totals %>%
   ylab("Count") +
   xlab("Referrals and Arrests")
 ```
-MY initial intution has been confirmed. We can see that more white students experience referrals and arrests. However, this does not control for the total number of students that are white or black that attend the public schools. Therefore, we cannot be confident that black students disproportionately receive punishment within public schools. To account for proportionality, I will make a new variable that accounts for proportionality. 
+MY initial intuition has been confirmed. We can see that more white students experience referrals and arrests. However, this does not control for the total number of students that are white or black that attend the public schools. Therefore, we cannot be confident that black students disproportionately receive punishment within public schools. To account for proportionality, I will make a new variable that accounts for proportionality. 
 ```{r}
 cleaned <- cleaned %>%
   mutate(total_bl = SCH_DISCWODIS_REF_BL_M + SCH_DISCWODIS_REF_BL_F + SCH_DISCWODIS_ARR_BL_M + SCH_DISCWODIS_ARR_BL_F, total_wh = SCH_DISCWODIS_REF_WH_M + SCH_DISCWODIS_REF_WH_F + SCH_DISCWODIS_ARR_WH_M + SCH_DISCWODIS_ARR_WH_M)
@@ -390,7 +390,7 @@ morelikely_State %>%
   labs(title = "Likelihood for a State (Including Political Party) to \nDisproportionately Punish Black Students", x = "State" , y = "Proportion") + 
   theme(axis.text=element_text(size=5))
 ```
-This graph would be better representation of the graph above for the viewer. The full state names are not cluttered and the segments are easier to follow visually. The point at the end of the segment not only precisely show proportion but also the party affiliaton of the state. 
+This graph would be better representation of the graph above for the viewer. The full state names are not cluttered and the segments are easier to follow visually. The point at the end of the segment not only precisely show proportion but also the party affiliation of the state. 
 
 ```{r message=FALSE, warning=FALSE}
 stateDiffs <- dist(morelikely_State)
@@ -404,7 +404,7 @@ In this example of clustering, we can see that the unsupervised learning was ver
 ***
 ### Conclusion
 
-In terms of my guiding question, it seems as if black students face disproportionate punishment compared to their white counterparts within the public school system in the United States. I was surprised to see that every category of punishment was dispropotionate. Furthermore, it looks like every single state is more likely to punish black students than white students to some extend. 
+In terms of my guiding question, it seems as if black students face disproportionate punishment compared to their white counterparts within the public school system in the United States. I was surprised to see that every category of punishment was disproportionate. Furthermore, it looks like every single state is more likely to punish black students than white students to some extend. 
 
 I would be interested to see how much further we can narrow down the geographic span of the analysis (school districts and counties). Also, I would interested in seeing the significance of this analysis through quantitative tests. 
 
